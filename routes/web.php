@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/','ProductController@index')->name('list-product');
+Route::get('/create-product','ProductController@create')->name('create-product');
+Route::post('/store-product','ProductController@store')->name('store-product');
