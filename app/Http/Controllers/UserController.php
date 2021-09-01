@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Product;
-use App\Http\Requests\ProductRequest;
+use App\User;
+use App\Http\Requests\UserRequest;
 
-class ProductController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $list_products = Product::all();
-        return view('product.list', compact('list_products'));
+        $listUser = User::all();
+        return view('user.index', compact('listUser'));
     }
 
     /**
@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        //
     }
 
     /**
@@ -35,19 +35,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(Request $request)
     {
-        $file = $request->image;
-        $file_name = $file->getClientOriginalName();
-        
-        if($file->move('upload/product',$file_name)){
-            $data = $request->all();
-            $data['image'] = '/upload/product/'.$file_name;
-            Product::create($data);
-            return redirect()->route('products.index')->with('success', 'Thêm sản phẩm thành công');
-        } else {
-            return redirect()->back()->with('errors', 'Có lỗi ! Vui lòng kiểm tra lại');
-        }
+        //
     }
 
     /**
@@ -58,7 +48,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $listAllPost = User::with('posts')->where('id',$id)->get();
+        return view('user.show',compact('listAllPost'));
     }
 
     /**
@@ -69,7 +60,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('user.edit', compact('user'));
     }
 
     /**
@@ -79,9 +71,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $data = request()->except(['_token', '_method']);
+        if(User::where('id', $id)->update($data)){
+            return redirect()->route('users.index')->with('success','Cập nhật Thành Công');
+        } else{
+           return redirect()->route('users.index')->with('errors','Cập nhật Không Thành Công');
+        }
     }
 
     /**
@@ -92,6 +89,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-       //
+        $user = User::find($id);
+        if($user->delete()){
+            return redirect()->back()->with('success','Xóa Thành Công');
+        } else{
+           return redirect()->back()->with('errors','Xóa Không Thành Công');
+        }
     }
 }

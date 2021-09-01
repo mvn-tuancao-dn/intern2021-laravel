@@ -5,7 +5,13 @@
 @section('content')
     <div class="container">
         <h1>List Product</h1>
-        <a href="{{ route('create-product') }}"><button type="button" class="btn btn-primary">Add Product</button></a>
+        <a href="{{ route('products.create') }}"><button type="button" class="btn btn-primary">Add Product</button></a>
+        @if (session('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>    
+                <strong>{{ session('success') }}</strong>
+            </div>
+        @endif
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -26,7 +32,7 @@
                         <td>${{ $product->price }}</td>
                         <td>{{ $product->description }}</td>
                         <td style = "text-align: center;">
-                            <img src="/upload/product/{{ $product->image }}" alt="Anh san pham" width = 100px>
+                            <img src="{{ asset($product->image) }}" alt="Anh san pham" width = 100px>
                         </td>
                         <td>{{ $product->quantity }}</td>
                         <td>
@@ -39,3 +45,12 @@
         </table>
     </div>
 @endsection
+@push('scripts')
+    <script>
+       $("document").ready(function(){
+            setTimeout(function(){
+            $("div.alert").remove();
+            }, 5000 );
+        });
+    </script>
+@endpush
