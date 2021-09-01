@@ -83,14 +83,7 @@ class ProductSeeder extends Seeder
                 'quantity' => 40,
             ],
         ];
-        foreach ($products as $product) {
-            \App\Product::create([
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'description' => $product['description'],
-                'image' => $product['image'],
-                'quantity' => $product['quantity']
-            ]);
-        }
+
+        \App\Product::insert($products);
     }
 }
